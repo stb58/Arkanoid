@@ -13,6 +13,8 @@ public class Arkanoid extends GraphicsProgram {
 	static final int ANCHO_LADRILLO = 35;
 	static final int ALTO_LADRILLO = 15;
 	static final int ANCHO_PANTALLA = 520;
+	//Comenzamos la partida con 3 vidas
+	int vida=3;
 
 	Bola bola1 = new Bola(10, 10, Color.RED);
 	CursorImagen miCursor = new CursorImagen("imagenes/cursor.png",0, 400);
@@ -21,8 +23,10 @@ public class Arkanoid extends GraphicsProgram {
 	GImage inicio = new GImage("imagenes/historia_arkanoid.png");
 	GImage fondo = new GImage("imagenes/fondo.jpg");
 	GImage bonus = new GImage("imagenes/Bonus.png");
+	GImage gameOver = new GImage ("imagenes/GAME_OVER.jpg");
 	GRect fondoMarcador = new GRect(300, 600);
 	Marcador miMarcador = new Marcador(20, 40);
+	GImage menosVida = new GImage ("imagenes/Menosvida.jpg");
 
 	public void init(){
 		add(inicio);
@@ -41,8 +45,8 @@ public class Arkanoid extends GraphicsProgram {
 		miMarcador.addMarcador(this);
 		while (true){
 			bola1.muevete(this); //paso el objeto arkanoid que se está ejecutando
-			pause(1);
-			miCursor.muevete(ANCHO_PANTALLA - 30, (int) bola1.getX());
+			pause(5);
+			//miCursor.muevete(ANCHO_PANTALLA - 30, (int) bola1.getX());
 			//Hacemos el bonus indicando que cuando llegue a la puntuación 31, sume 10 puntos y muestre un mensaje
 			if(miMarcador.puntuacion == 31){
 				add(bonus);
@@ -52,6 +56,11 @@ public class Arkanoid extends GraphicsProgram {
 			}
 			if(miMarcador.puntuacion == 101){
 				creaNivelDos();
+			}
+			pierdevida();
+			//Aqui se acaba el juego
+			if (vida==0){
+				add(gameOver);
 			}
 		}
 	}
@@ -70,14 +79,14 @@ public class Arkanoid extends GraphicsProgram {
 		for (int j=0; j<numeroLadrillos; j++){
 			for (int i=j; i<numeroLadrillos; i++){
 				Ladrillo3 miLadrillo = new Ladrillo3("imagenes/ladrillo.png");
-						
-						
-						
-						//ANCHO_LADRILLO*i - ANCHO_LADRILLO/2*j + desplazamiento_inicial_X, //pos X
-						//ALTO_LADRILLO*j + desplazamiento_inicial_Y,  //pos Y
-						//ANCHO_LADRILLO, //ancho
-						//ALTO_LADRILLO, // alto
-						//Color.//BLUE);
+
+
+
+				//ANCHO_LADRILLO*i - ANCHO_LADRILLO/2*j + desplazamiento_inicial_X, //pos X
+				//ALTO_LADRILLO*j + desplazamiento_inicial_Y,  //pos Y
+				//ANCHO_LADRILLO, //ancho
+				//ALTO_LADRILLO, // alto
+				//Color.//BLUE);
 				add(miLadrillo, ANCHO_LADRILLO*i - ANCHO_LADRILLO/2*j + desplazamiento_inicial_X, ALTO_LADRILLO*j + desplazamiento_inicial_Y);
 			}
 		}
@@ -90,17 +99,27 @@ public class Arkanoid extends GraphicsProgram {
 		for (int a=0; a<numeroLadrillos; a++){
 			for (int b=a; b<numeroLadrillos; b++){
 				Ladrillo3 miLadrillo = new Ladrillo3("imagenes/ladrillo.png");
-						
-						
-						
-						//ANCHO_LADRILLO*i - ANCHO_LADRILLO/2*j + desplazamiento_inicial_X, //pos X
-						//ALTO_LADRILLO*j + desplazamiento_inicial_Y,  //pos Y
-						//ANCHO_LADRILLO, //ancho
-						//ALTO_LADRILLO, // alto
-						//Color.//BLUE);
+
+
+
+				//ANCHO_LADRILLO*i - ANCHO_LADRILLO/2*j + desplazamiento_inicial_X, //pos X
+				//ALTO_LADRILLO*j + desplazamiento_inicial_Y,  //pos Y
+				//ANCHO_LADRILLO, //ancho
+				//ALTO_LADRILLO, // alto
+				//Color.//BLUE);
 				add(miLadrillo, ANCHO_LADRILLO*b + desplazamiento_inicial_X, ALTO_LADRILLO*a + desplazamiento_inicial_Y);
 			}
 		}
 	}
-	
+	//Hacemos un public void en el que en caso de que nos toque con el suelo, nos reste una vida
+	public void pierdevida(){
+		if(bola1.getY() == 440){
+			bola1.setLocation(50, 100);
+			vida = vida - 1;
+			add(menosVida);
+			waitForClick();
+			remove(menosVida);
+		}		
+	}
+
 }
